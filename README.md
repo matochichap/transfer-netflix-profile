@@ -2,12 +2,17 @@
 A bot that helps you find all the shows you watched and copies it over to another profile by adding to list of movies
 
 Step 1: Go to Account > Profile & Parental Controls > {your profile} > Viewing activity
+
 Step 2: Click Download all at the end of the page (You will get a csv with entries on everytime you click onto a show)
+
 Step 3: Download ChromeDriver at https://chromedriver.chromium.org/downloads
+
 Step 4: Fill in the required variables
+
 Step 5: Run the code
 
 Note:
+
 The bot will automatically choose the first profile to add to.
 
 If you want to add to another profile, under the profile_name variable, change to By.XPATH and get the XPATH from the netflix profile page.
