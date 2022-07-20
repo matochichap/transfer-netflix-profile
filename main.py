@@ -10,8 +10,9 @@ import pandas
 CHROME_DRIVER_PATH = "right click on file > copy file path"
 EMAIL = "email"
 PASSWORD = "password"
+ADD_TO_PROFILE = 1  # add to first by default
 
-CSV_TO_FORMAT = "NetflixViewingHistory.csv"  # this should be the default filename
+CSV_TO_FORMAT = "NetflixViewingHistory.csv"  # this should be the default filename when you download the file
 FORMATTED_CSV_TO_SEARCH = "formatted_netflix_movies.csv"
 NETFLIX_URL = "https://www.netflix.com/browse"
 
@@ -37,8 +38,13 @@ def netflix_add_to_list(email, password, chrome_driver_path, csv_to_search):
     sign_in_btn.click()
 
     sleep(2)
-    profile_name = driver.find_element(By.CSS_SELECTOR, '.profile-link')  # need to use XPATH if not adding to first profile
-    profile_name.click()
+    profile_names = driver.find_elements(By.CSS_SELECTOR, '.choose-profile .profile-link')
+    try:
+        profile_names[ADD_TO_PROFILE - 1].click()
+    except IndexError:
+        print(f"Profile {ADD_TO_PROFILE} does not exist.")
+        driver.quit()
+        return
 
     for show in shows:
         # search tab state unchanged after show not found so skip this line of code when exception thrown
@@ -66,14 +72,15 @@ def netflix_add_to_list(email, password, chrome_driver_path, csv_to_search):
             clear_search_bar.click()
             continue
 
-        sleep(2)
-        add_to_list = driver.find_element(By.CSS_SELECTOR, '.ltr-axvtg2-toolTipWrapper button')
+        add_to_list = driver.find_element(By.CSS_SELECTOR, '.ptrack-content button')
         add_to_list.click()
         add_to_list.send_keys(Keys.ESCAPE)
 
         sleep(1)
         clear_search_bar = driver.find_element(By.CSS_SELECTOR, '.icon-close')
         clear_search_bar.click()
+
+    driver.quit()
 
 
 def format_netflix_csv(file):
